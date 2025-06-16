@@ -1,0 +1,7 @@
+streamlit
+streamlit-autorefresh
+pandas
+Pillow
+qrcode[pil]
+reportlab
+xlsxwriter
