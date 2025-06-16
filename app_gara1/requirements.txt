@@ -1,5 +1,7 @@
 streamlit
-pandas
-qrcode
-Pillow
 streamlit-autorefresh
+pandas
+Pillow
+qrcode[pil]
+reportlab
+xlsxwriter
