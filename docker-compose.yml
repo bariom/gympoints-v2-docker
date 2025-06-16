@@ -5,15 +5,11 @@ services:
   gara1:
     build: ./app_gara1
     container_name: gympoints_gara1
-    ports:
-      - "8501:8501"
     restart: always
 
   gara2:
     build: ./app_gara2
     container_name: gympoints_gara2
-    ports:
-      - "8502:8501"
     restart: always
 
   nginx:
@@ -28,6 +24,9 @@ services:
       - ./certbot/conf:/etc/letsencrypt
       - ./certbot/www:/var/www/certbot
     restart: always
+    depends_on:
+      - gara1
+      - gara2
 
   certbot:
     image: certbot/certbot
