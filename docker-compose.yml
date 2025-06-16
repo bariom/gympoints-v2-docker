@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+
+  gara1:
+    build: ./app_gara1
+    container_name: gympoints_gara1
+    ports:
+      - "8501:8501"
+    restart: always
+
+  gara2:
+    build: ./app_gara2
+    container_name: gympoints_gara2
+    ports:
+      - "8502:8501"
+    restart: always
+
+  nginx:
+    image: nginx:alpine
+    container_name: nginx_proxy
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
+    restart: always
+
+  certbot:
+    image: certbot/certbot
+    volumes:
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
