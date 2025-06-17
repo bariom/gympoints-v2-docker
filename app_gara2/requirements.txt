@@ -4,4 +4,4 @@ pandas
 Pillow
 qrcode[pil]
 reportlab
-xlsxwriter
+xlsxwriter==3.1.9
