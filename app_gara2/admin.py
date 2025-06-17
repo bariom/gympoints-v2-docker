@@ -192,7 +192,7 @@ def show_admin():
         try:
             url_base = st.request.base_url
         except:
-            url_base = "https://gara1.gympoints.ch"  # fallback
+            url_base = "https://gara2.gympoints.ch"  # fallback
 
         st.subheader("QR Code di accesso giudici")
 
@@ -205,24 +205,25 @@ def show_admin():
         # Recuperiamo i giudici dal DB
         giudici = c.execute("SELECT name, surname, code FROM judges ORDER BY surname, name").fetchall()
 
-        # Creiamo una lista per la selectbox
-        opzioni = [f"{name} {surname} (Codice: {code})" for name, surname, code in giudici]
-        opzione_selezionata = st.selectbox("Seleziona il giudice per il QR code", opzioni, index=0)
+        # Se non ci sono giudici
+        if not giudici:
+            st.info("Nessun giudice inserito.")
+        else:
+            opzioni = [f"{name} {surname} (Codice: {code})" for name, surname, code in giudici]
+            opzione_selezionata = st.selectbox("Seleziona il giudice per il QR code", opzioni, index=0)
 
-        # Estraggo il giudice selezionato
-        indice = opzioni.index(opzione_selezionata)
-        name, surname, code = giudici[indice]
+            indice = opzioni.index(opzione_selezionata)
+            name, surname, code = giudici[indice]
 
-        # Genero il QR solo per il giudice selezionato
-        giudice_key = f"{surname.strip().lower()}{code}"
-        full_url = f"{url_base}?giudice={giudice_key}"
+            giudice_key = f"{surname.strip().lower()}{code}"
+            full_url = f"{url_base}?giudice={giudice_key}"
 
-        qr_img = qrcode.make(full_url)
-        buf = io.BytesIO()
-        qr_img.save(buf)
-        buf.seek(0)
+            qr_img = qrcode.make(full_url)
+            buf = io.BytesIO()
+            qr_img.save(buf)
+            buf.seek(0)
 
-        st.image(buf, caption=f"{name} {surname}", width=200)
+            st.image(buf, caption=f"{name} {surname}", width=200)
 
     # --- GESTIONE ROTAZIONI ---
     with tab3:
