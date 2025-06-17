@@ -186,7 +186,6 @@ def show_admin():
         else:
             st.info("Nessuna assegnazione giudice da modificare.")
 
-        st.subheader("QR Code di accesso giudici")
 
         # Ricaviamo dinamicamente il base URL dall'ambiente Streamlit
         try:
