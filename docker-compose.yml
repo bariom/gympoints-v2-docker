@@ -1,3 +1,4 @@
+
 services:
 
   nginx-proxy:
@@ -12,8 +13,8 @@ services:
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock:ro
       - ./nginx/html:/usr/share/nginx/html
-      - ./certbot/conf:/etc/nginx/certs
       - ./nginx-proxy/data:/etc/nginx/vhost.d
+      - ./nginx-proxy/certs:/etc/nginx/certs
 
   letsencrypt:
     image: jrcs/letsencrypt-nginx-proxy-companion
@@ -24,7 +25,7 @@ services:
       - DEFAULT_EMAIL=omar.bariffi@gmail.com
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - ./certbot/conf:/etc/nginx/certs
+      - ./nginx-proxy/certs:/etc/nginx/certs
       - ./nginx-proxy/data:/etc/nginx/vhost.d
 
   gara1:
