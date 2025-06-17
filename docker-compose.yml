@@ -1,3 +1,5 @@
+version: '3'
+
 services:
 
   nginx-proxy:
@@ -7,12 +9,14 @@ services:
     ports:
       - "80:80"
       - "443:443"
+    environment:
+      - ENABLE_IPV6=true
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock:ro
       - ./nginx/html:/usr/share/nginx/html
       - ./nginx-proxy/data:/etc/nginx/vhost.d
       - ./nginx-proxy/certs:/etc/nginx/certs
-      - ./nginx-proxy/acme:/etc/acme.sh  # <-- opzionale ma consigliato
+      - ./nginx-proxy/acme:/etc/acme.sh
 
   letsencrypt:
     image: jrcs/letsencrypt-nginx-proxy-companion
@@ -23,10 +27,10 @@ services:
       - DEFAULT_EMAIL=omar.bariffi@gmail.com
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - ./nginx/html:/usr/share/nginx/html         # <-- manca nel tuo file
+      - ./nginx/html:/usr/share/nginx/html
       - ./nginx-proxy/data:/etc/nginx/vhost.d
       - ./nginx-proxy/certs:/etc/nginx/certs
-      - ./nginx-proxy/acme:/etc/acme.sh           # <-- opzionale ma consigliato
+      - ./nginx-proxy/acme:/etc/acme.sh
 
   gara1:
     build: ./app_gara1
