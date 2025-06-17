@@ -1,5 +1,3 @@
-
-
 services:
 
   nginx-proxy:
@@ -9,10 +7,25 @@ services:
     ports:
       - "80:80"
       - "443:443"
+    environment:
+      - DEFAULT_EMAIL=omar.bariffi@gmail.com
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock:ro
-      - ./certbot/conf:/etc/nginx/certs
       - ./nginx/html:/usr/share/nginx/html
+      - ./certbot/conf:/etc/nginx/certs
+      - ./nginx-proxy/data:/etc/nginx/vhost.d
+
+  letsencrypt:
+    image: jrcs/letsencrypt-nginx-proxy-companion
+    container_name: nginx-letsencrypt
+    restart: always
+    environment:
+      - NGINX_PROXY_CONTAINER=nginx-proxy
+      - DEFAULT_EMAIL=omar.bariffi@gmail.com
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./certbot/conf:/etc/nginx/certs
+      - ./nginx-proxy/data:/etc/nginx/vhost.d
 
   gara1:
     build: ./app_gara1
@@ -21,6 +34,8 @@ services:
     environment:
       - VIRTUAL_HOST=gara1.gympoints.ch
       - VIRTUAL_PORT=8501
+      - LETSENCRYPT_HOST=gara1.gympoints.ch
+      - LETSENCRYPT_EMAIL=omar.bariffi@gmail.com
 
   gara2:
     build: ./app_gara2
@@ -29,10 +44,5 @@ services:
     environment:
       - VIRTUAL_HOST=gara2.gympoints.ch
       - VIRTUAL_PORT=8501
-
-
-  certbot:
-    image: certbot/certbot
-    volumes:
-      - ./certbot/conf:/etc/letsencrypt
-      - ./certbot/www:/var/www/certbot
+      - LETSENCRYPT_HOST=gara2.gympoints.ch
+      - LETSENCRYPT_EMAIL=omar.bariffi@gmail.com
