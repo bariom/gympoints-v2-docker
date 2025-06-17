@@ -1,62 +1,29 @@
+version: "3.8"
 
 services:
 
-  nginx-proxy:
-    image: jwilder/nginx-proxy:alpine
-    container_name: nginx-proxy
+  nginx:
+    image: nginx:latest
+    container_name: nginx
     restart: always
     ports:
       - "80:80"
       - "443:443"
-    environment:
-      - ENABLE_IPV6=true
     volumes:
-      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - ./nginx/conf.d:/etc/nginx/conf.d
       - ./nginx/html:/usr/share/nginx/html
-      - ./nginx-proxy/data:/etc/nginx/vhost.d
-      - ./nginx-proxy/certs:/etc/nginx/certs
-      - ./nginx-proxy/acme:/etc/acme.sh
-
-  letsencrypt:
-    image: jrcs/letsencrypt-nginx-proxy-companion
-    container_name: nginx-letsencrypt
-    restart: always
-    environment:
-      - NGINX_PROXY_CONTAINER=nginx-proxy
-      - DEFAULT_EMAIL=omar.bariffi@gmail.com
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - ./nginx/html:/usr/share/nginx/html
-      - ./nginx-proxy/data:/etc/nginx/vhost.d
-      - ./nginx-proxy/certs:/etc/nginx/certs
-      - ./nginx-proxy/acme:/etc/acme.sh
+      - ./nginx/certs:/etc/nginx/certs
 
   gara1:
     build: ./app_gara1
     container_name: gympoints_gara1
     restart: always
-    environment:
-      - VIRTUAL_HOST=gara1.gympoints.ch
-      - VIRTUAL_PORT=8501
-      - LETSENCRYPT_HOST=gara1.gympoints.ch
-      - LETSENCRYPT_EMAIL=omar.bariffi@gmail.com
+    ports:
+      - "8501:8501"
 
   gara2:
     build: ./app_gara2
     container_name: gympoints_gara2
     restart: always
-    environment:
-      - VIRTUAL_HOST=gara2.gympoints.ch
-      - VIRTUAL_PORT=8501
-      - LETSENCRYPT_HOST=gara2.gympoints.ch
-      - LETSENCRYPT_EMAIL=omar.bariffi@gmail.com
-
-  fallback_gara1:
-    image: nginx:alpine
-    container_name: fallback_gara1
-    restart: always
-    volumes:
-      - ./nginx/html:/usr/share/nginx/html:ro
-    environment:
-      - VIRTUAL_HOST=gara1.gympoints.ch
-      - VIRTUAL_PORT=80
+    ports:
+      - "8502:8501"
