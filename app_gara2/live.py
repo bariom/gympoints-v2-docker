@@ -194,26 +194,40 @@ def show_live():
                 unsafe_allow_html=True
             )
 
-    # Prova a ricavare l'URL pubblico corrente
+    # Ricaviamo l'URL corrente (se Streamlit >= 1.26)
     try:
         url_corrente = st.request.base_url
     except:
-        # Per versioni Streamlit precedenti o fallback
-        url_corrente = "https://gara1.gympoints.ch"  # fallback hardcoded
+        url_corrente = "https://gara1.gympoints.ch"  # fallback statico
 
-    # Genera QR code
-    qr = qrcode.QRCode(box_size=8, border=2)
+    # Genera il QR Code
+    qr = qrcode.QRCode(box_size=6, border=2)
     qr.add_data(url_corrente)
     qr.make(fit=True)
     img = qr.make_image(fill_color="black", back_color="white")
 
-    # Convertiamo l'immagine per Streamlit
+    # Convertiamo l'immagine in base64 per embeddarla inline
     buf = BytesIO()
-    img.save(buf)
-    buf.seek(0)
+    img.save(buf, format="PNG")
+    b64_img = base64.b64encode(buf.getvalue()).decode()
 
-    st.markdown("<hr style='margin-top:40px;margin-bottom:20px;'>", unsafe_allow_html=True)
-    st.markdown("**Scansiona il QR Code per aprire il tabellone su smartphone:**")
-    st.image(buf, caption=url_corrente, width=200)
+    # Inseriamo l'immagine QR in alto a destra
+    st.markdown(
+        f"""
+        <div style="
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            background-color: white;
+            padding: 8px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.3);
+        ">
+            <img src="data:image/png;base64,{b64_img}" width="120">
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
 
     conn.close()
