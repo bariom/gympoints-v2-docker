@@ -215,7 +215,15 @@ def show_live():
     # Inseriamo l'immagine QR in alto a destra
     st.markdown(
         f"""
-        <div style="
+        <style>
+        @media (max-width: 768px) {{
+            #qr-code-container {{
+                display: none;
+            }}
+        }}
+        </style>
+
+        <div id="qr-code-container" style="
             position: fixed;
             top: 20px;
             right: 20px;
@@ -229,6 +237,8 @@ def show_live():
         </div>
         """,
         unsafe_allow_html=True
+    )
+
     )
 
     conn.close()
