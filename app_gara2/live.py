@@ -199,7 +199,7 @@ def show_live():
     try:
         url_corrente = st.request.base_url
     except:
-        url_corrente = "https://gara1.gympoints.ch"  # fallback statico
+        url_corrente = "https://gara2.gympoints.ch"  # fallback statico
 
     # Genera il QR Code
     qr = qrcode.QRCode(box_size=6, border=2)
