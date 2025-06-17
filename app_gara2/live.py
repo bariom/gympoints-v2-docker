@@ -6,6 +6,7 @@ from PIL import Image
 import os
 import base64
 from io import BytesIO
+import qrcode
 
 def image_to_base64(path):
     with open(path, "rb") as img_file:
