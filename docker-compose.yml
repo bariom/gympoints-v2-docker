@@ -50,3 +50,13 @@ services:
       - VIRTUAL_PORT=8501
       - LETSENCRYPT_HOST=gara2.gympoints.ch
       - LETSENCRYPT_EMAIL=omar.bariffi@gmail.com
+
+  fallback_gara1:
+    image: nginx:alpine
+    container_name: fallback_gara1
+    restart: always
+    volumes:
+      - ./nginx/html:/usr/share/nginx/html:ro
+    environment:
+      - VIRTUAL_HOST=gara1.gympoints.ch
+      - VIRTUAL_PORT=80
