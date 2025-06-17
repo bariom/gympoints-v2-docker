@@ -6,6 +6,7 @@ from PIL import Image
 import os
 import base64
 from io import BytesIO
+import qrcode
 
 def image_to_base64(path):
     with open(path, "rb") as img_file:
@@ -193,5 +194,27 @@ def show_live():
                 "</div>",
                 unsafe_allow_html=True
             )
+
+    # Prova a ricavare l'URL pubblico corrente
+    try:
+        url_corrente = st.request.base_url
+    except:
+        # Per versioni Streamlit precedenti o fallback
+        url_corrente = "https://gara1.gympoints.ch"  # fallback hardcoded
+
+    # Genera QR code
+    qr = qrcode.QRCode(box_size=8, border=2)
+    qr.add_data(url_corrente)
+    qr.make(fit=True)
+    img = qr.make_image(fill_color="black", back_color="white")
+
+    # Convertiamo l'immagine per Streamlit
+    buf = BytesIO()
+    img.save(buf)
+    buf.seek(0)
+
+    st.markdown("<hr style='margin-top:40px;margin-bottom:20px;'>", unsafe_allow_html=True)
+    st.markdown("**Scansiona il QR Code per aprire il tabellone su smartphone:**")
+    st.image(buf, caption=url_corrente, width=200)
 
     conn.close()
