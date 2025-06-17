@@ -1,32 +1,35 @@
 
+
 services:
+
+  nginx-proxy:
+    image: jwilder/nginx-proxy:alpine
+    container_name: nginx-proxy
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - ./certbot/conf:/etc/nginx/certs
+      - ./nginx/html:/usr/share/nginx/html
 
   gara1:
     build: ./app_gara1
     container_name: gympoints_gara1
     restart: always
+    environment:
+      - VIRTUAL_HOST=gara1.gympoints.ch
+      - VIRTUAL_PORT=8501
 
   gara2:
     build: ./app_gara2
     container_name: gympoints_gara2
     restart: always
+    environment:
+      - VIRTUAL_HOST=gara2.gympoints.ch
+      - VIRTUAL_PORT=8501
 
-  nginx:
-    image: nginx:alpine
-    container_name: nginx_proxy
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
-      - ./nginx/conf.d:/etc/nginx/conf.d
-      - ./nginx/html:/etc/nginx/html
-      - ./certbot/conf:/etc/letsencrypt
-      - ./certbot/www:/var/www/certbot
-    restart: always
-    depends_on:
-      - gara1
-      - gara2
 
   certbot:
     image: certbot/certbot
