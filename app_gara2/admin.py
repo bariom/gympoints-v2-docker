@@ -207,7 +207,7 @@ def show_admin():
 
         # Creiamo una lista per la selectbox
         opzioni = [f"{name} {surname} (Codice: {code})" for name, surname, code in giudici]
-        opzione_selezionata = st.selectbox("Seleziona il giudice per il QR code", opzioni)
+        opzione_selezionata = st.selectbox("Seleziona il giudice per il QR code", opzioni, index=0)
 
         # Estraggo il giudice selezionato
         indice = opzioni.index(opzione_selezionata)
