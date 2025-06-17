@@ -187,18 +187,22 @@ def show_admin():
             st.info("Nessuna assegnazione giudice da modificare.")
 
         st.subheader("QR Code di accesso giudici")
-        url_base = st.text_input("URL base", value=st.session_state.get("url_base", "https://gympoints.streamlit.app"))
-        st.session_state["url_base"] = url_base
+
+        # Ricaviamo dinamicamente il base URL dall'ambiente Streamlit
+        try:
+            url_base = st.request.base_url
+        except:
+            url_base = "https://gara1.gympoints.ch"  # fallback
 
         giudici = c.execute("SELECT name, surname, code FROM judges").fetchall()
         for name, surname, code in giudici:
             giudice_key = f"{surname.strip().lower()}{code}"
-            full_url = f"{url_base}/?giudice={giudice_key}"
+            full_url = f"{url_base}?giudice={giudice_key}"
             qr_img = qrcode.make(full_url)
             buf = io.BytesIO()
             qr_img.save(buf)
             buf.seek(0)
-            st.image(buf, caption=f"{name} {surname} - {full_url}", width=200)
+            st.image(buf, caption=f"{name} {surname}", width=200)
 
     # --- GESTIONE ROTAZIONI ---
     with tab3:
