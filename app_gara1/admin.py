@@ -194,15 +194,35 @@ def show_admin():
         except:
             url_base = "https://gara1.gympoints.ch"  # fallback
 
-        giudici = c.execute("SELECT name, surname, code FROM judges").fetchall()
-        for name, surname, code in giudici:
-            giudice_key = f"{surname.strip().lower()}{code}"
-            full_url = f"{url_base}?giudice={giudice_key}"
-            qr_img = qrcode.make(full_url)
-            buf = io.BytesIO()
-            qr_img.save(buf)
-            buf.seek(0)
-            st.image(buf, caption=f"{name} {surname}", width=200)
+        st.subheader("QR Code di accesso giudici")
+
+        # Ricaviamo dinamicamente il base URL dall'ambiente Streamlit
+        try:
+            url_base = st.request.base_url
+        except:
+            url_base = "https://gara1.gympoints.ch"  # fallback
+
+        # Recuperiamo i giudici dal DB
+        giudici = c.execute("SELECT name, surname, code FROM judges ORDER BY surname, name").fetchall()
+
+        # Creiamo una lista per la selectbox
+        opzioni = [f"{name} {surname} (Codice: {code})" for name, surname, code in giudici]
+        opzione_selezionata = st.selectbox("Seleziona il giudice per il QR code", opzioni)
+
+        # Estraggo il giudice selezionato
+        indice = opzioni.index(opzione_selezionata)
+        name, surname, code = giudici[indice]
+
+        # Genero il QR solo per il giudice selezionato
+        giudice_key = f"{surname.strip().lower()}{code}"
+        full_url = f"{url_base}?giudice={giudice_key}"
+
+        qr_img = qrcode.make(full_url)
+        buf = io.BytesIO()
+        qr_img.save(buf)
+        buf.seek(0)
+
+        st.image(buf, caption=f"{name} {surname}", width=200)
 
     # --- GESTIONE ROTAZIONI ---
     with tab3:
