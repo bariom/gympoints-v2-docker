@@ -114,7 +114,7 @@ def show_admin():
             if login_btn:
                 if check_credentials(username, password):
                     st.session_state.admin_logged_in = True
-                    st.experimental_rerun()
+                    st.rerun()
                 else:
                     st.error("Credenziali non valide.")
         return  # blocca l'accesso al resto della pagina
