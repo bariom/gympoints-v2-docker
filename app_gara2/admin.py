@@ -93,6 +93,32 @@ def reset_database():
 
 # MAIN ADMIN
 def show_admin():
+    # ---- Login Admin ----
+    def check_credentials(username, password):
+        # Inserisci qui i tuoi utenti e password (meglio hashate in futuro)
+        valid_users = {
+            "admin": "supersegreta123",  # puoi usare anche un hash qui
+        }
+        return valid_users.get(username) == password
+
+    if "admin_logged_in" not in st.session_state:
+        st.session_state.admin_logged_in = False
+
+    if not st.session_state.admin_logged_in:
+        st.title("Accesso Amministrazione")
+        with st.form("login_form"):
+            username = st.text_input("Utente")
+            password = st.text_input("Password", type="password")
+            login_btn = st.form_submit_button("Login")
+
+            if login_btn:
+                if check_credentials(username, password):
+                    st.session_state.admin_logged_in = True
+                    st.rerun()
+                else:
+                    st.error("Credenziali non valide.")
+        return  # blocca l'accesso al resto della pagina
+
     st.title("Amministrazione Gara")
 
     conn = get_connection()
@@ -186,11 +212,12 @@ def show_admin():
         else:
             st.info("Nessuna assegnazione giudice da modificare.")
 
+
         # Ricaviamo dinamicamente il base URL dall'ambiente Streamlit
         try:
             url_base = st.request.base_url
         except:
-            url_base = "https://gara2.gympoints.ch"  # fallback
+            url_base = "https://gara1.gympoints.ch"  # fallback
 
         st.subheader("QR Code di accesso giudici")
 
