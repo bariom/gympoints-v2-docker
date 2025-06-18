@@ -13,17 +13,23 @@ services:
       - ./nginx/conf.d:/etc/nginx/conf.d
       - ./nginx/html:/usr/share/nginx/html
       - ./nginx/certs:/etc/nginx/certs
+    networks:
+      - gympoints-net
 
   gara1:
     build: ./app_gara1
-    container_name: gympoints_gara1
+    container_name: gara1
     restart: always
-    ports:
-      - "8501:8501"
+    networks:
+      - gympoints-net
 
   gara2:
     build: ./app_gara2
-    container_name: gympoints_gara2
+    container_name: gara2
     restart: always
-    ports:
-      - "8502:8501"
+    networks:
+      - gympoints-net
+
+networks:
+  gympoints-net:
+    driver: bridge
