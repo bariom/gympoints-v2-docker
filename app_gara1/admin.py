@@ -486,9 +486,12 @@ def show_admin():
             conn.commit()
             st.success("Logica aggiornata")
 
-        st.markdown("### Punteggi registrati")
+        st.markdown("### Punteggi assegnati")
+
+        # Leggi dati dal DB ogni volta che entri nel tab
         scores = c.execute("""
-            SELECT s.id, a.name || ' ' || a.surname AS atleta, s.apparatus, s.d, s.e, s.penalty, s.score
+            SELECT s.id, a.name || ' ' || a.surname AS atleta,
+                   s.apparatus, s.d, s.e, s.penalty, s.score
             FROM scores s
             JOIN athletes a ON a.id = s.athlete_id
             ORDER BY s.id DESC
@@ -497,25 +500,24 @@ def show_admin():
         if not scores:
             st.info("Nessun punteggio registrato.")
         else:
-            for riga in scores:
-                score_id, atleta, attrezzo, d_val, e_val, penalty_val, score_val = riga
-
-                with st.expander(f"{atleta} - {attrezzo}"):
-                    col1, col2, col3, col4 = st.columns(4)
+            for score_id, atleta, attrezzo, d_val, e_val, pen_val, tot_val in scores:
+                with st.expander(f"{atleta} — {attrezzo}"):
+                    col1, col2, col3, col4 = st.columns([1, 1, 1, 1])
                     new_d = col1.number_input("D", value=d_val or 0.0, step=0.1, key=f"d_{score_id}")
                     new_e = col2.number_input("E", value=e_val or 0.0, step=0.1, key=f"e_{score_id}")
-                    new_p = col3.number_input("Penalty", value=penalty_val or 0.0, step=0.1, key=f"p_{score_id}")
-                    col4.metric("Totale", round(new_d + new_e - new_p, 3))
+                    new_pen = col3.number_input("Penalty", value=pen_val or 0.0, step=0.1, key=f"pen_{score_id}")
 
-                    if st.button("Salva modifiche", key=f"save_{score_id}"):
-                        nuovo_totale = new_d + new_e - new_p
+                    new_tot = round(new_d + new_e - new_pen, 3)
+                    col4.markdown(f"**Totale → {new_tot:.3f}**")
+
+                    if col4.button("💾 Salva", key=f"save_{score_id}"):
                         c.execute("""
                             UPDATE scores
-                            SET d = ?, e = ?, penalty = ?, score = ?
-                            WHERE id = ?
-                        """, (new_d, new_e, new_p, nuovo_totale, score_id))
+                            SET d=?, e=?, penalty=?, score=?
+                            WHERE id=?
+                        """, (new_d, new_e, new_pen, new_tot, score_id))
                         conn.commit()
-                        st.success("Punteggio aggiornato.")
+                        st.success("✅ Aggiornato")
                         st.rerun()
 
     # --- IMPOSTAZIONI GARA ---
