@@ -581,9 +581,9 @@ def costruisci_df_classifica(attrezzi=None):
     df_raw = pd.read_sql_query(query, conn)
     conn.close()
 
-    df_pivot_d = df_raw.pivot_table(index=['Cognome', 'Nome', 'Anno', 'Società'],
+    df_pivot_d = df_raw.pivot_table(index=['Cognome', 'Nome', 'Società'],
                                     columns='Attrezzo', values='D', aggfunc='first')
-    df_pivot_t = df_raw.pivot_table(index=['Cognome', 'Nome', 'Anno', 'Società'],
+    df_pivot_t = df_raw.pivot_table(index=['Cognome', 'Nome', 'Società'],
                                     columns='Attrezzo', values='TotaleParziale', aggfunc='first')
 
     df_pivot_d.columns = [f"{col}_D" for col in df_pivot_d.columns]
@@ -592,7 +592,7 @@ def costruisci_df_classifica(attrezzi=None):
     df = pd.concat([df_pivot_d, df_pivot_t], axis=1).reset_index()
 
     # Ordina colonne secondo attrezzi
-    ordered_cols = ['Cognome', 'Nome', 'Anno', 'Società']
+    ordered_cols = ['Cognome', 'Nome', 'Società']
     for a in attrezzi:
         ordered_cols.append(f"{a}_D")
         ordered_cols.append(f"{a}_Tot")
