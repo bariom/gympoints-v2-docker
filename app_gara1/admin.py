@@ -487,7 +487,8 @@ def show_admin():
             st.success("Logica aggiornata")
 
         st.markdown("### Punteggi assegnati")
-
+        if st.button("🔄 Aggiorna tabella punteggi"):
+            st.rerun()
         # Leggi dati dal DB ogni volta che entri nel tab
         scores = c.execute("""
             SELECT s.id, a.name || ' ' || a.surname AS atleta,
