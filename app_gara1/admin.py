@@ -40,7 +40,7 @@ def mostra_logo():
                 box-shadow: none;
             }}
             #logo-top-left img {{
-                height: 180px;
+                height: 120px;
                 margin: 0;
                 display: block;
             }}
