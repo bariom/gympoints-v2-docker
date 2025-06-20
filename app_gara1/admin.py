@@ -13,7 +13,7 @@ import datetime
 from db import get_connection
 from PIL import Image
 from exporter import export_results_detailed
-from pdf_export import export_pdf_results
+from pdf_export import generate_official_pdf
 
 
 # Utility immagine base64
@@ -454,7 +454,6 @@ def show_admin():
                         c.execute("INSERT INTO rotations (apparatus, athlete_id, rotation_order) VALUES (?, ?, ?)",
                                   (att, athlete_id, rot))
             conn.commit()
-            st.rerun
             st.success("Rotazioni olimpiche 2–6 generate")
 
 
@@ -462,7 +461,7 @@ def show_admin():
     with tab4:
         st.subheader("Esportazioni")
         export_results_detailed()
-        export_pdf_results()
+        generate_official_pdf()
 
     # --- STATO GARA ---
     with tab5:

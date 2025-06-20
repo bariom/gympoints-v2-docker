@@ -1,83 +1,81 @@
-
-import streamlit as st
-import pandas as pd
-from db import get_connection
-from reportlab.lib.pagesizes import A4
-from reportlab.pdfgen import canvas
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Image as RLImage, Spacer, Paragraph
+from reportlab.lib.pagesizes import landscape, A4
 from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet
-from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
+import pandas as pd
 import io
+import os
 
-def generate_pdf(df, nome_gara="Gara Ginnastica Artistica", data_gara="Data Gara"):
+def generate_official_pdf(df, attrezzi=None, logo_path=None, gara_title="Classifica GAM Introduzione"):
+    if attrezzi is None:
+        attrezzi = ["Suolo", "Cavallo a maniglie", "Anelli", "Parallele", "Sbarra", "Volteggio"]
+
     buffer = io.BytesIO()
-    doc = SimpleDocTemplate(buffer, pagesize=A4)
+    doc = SimpleDocTemplate(
+        buffer, pagesize=landscape(A4),
+        rightMargin=20, leftMargin=20, topMargin=20, bottomMargin=20
+    )
     elements = []
 
     styles = getSampleStyleSheet()
-    title = Paragraph(f"<b>{nome_gara}</b>", styles['Title'])
-    subtitle = Paragraph(f"<i>{data_gara}</i>", styles['Normal'])
-
+    title = Paragraph(gara_title, styles['Title'])
     elements.append(title)
-    elements.append(subtitle)
-    elements.append(Spacer(1, 20))
+    elements.append(Spacer(1, 12))
 
-    # Header tabella
-    data = [['#', 'Atleta', 'Club', 'D', 'E', 'Totale']]
+    # Percorsi delle icone attrezzi
+    icon_paths = [os.path.join("img", f"{a}.png") for a in attrezzi]
 
-    # Righe punteggi
+    # Prima riga intestazioni
+    headers = ["Rg.", "Cognome", "Nome", "Anno", "Società"]
+    for path in icon_paths:
+        if os.path.exists(path):
+            with open(path, "rb") as f:
+                img = RLImage(io.BytesIO(f.read()), width=24, height=24)
+                headers.append(img)
+        else:
+            headers.append(" ")
+    headers.append("Totale")
+
+    # Seconda riga sotto intestazione
+    sublabels = ["", "", "", "", ""]
+    for a in attrezzi:
+        sublabels.append("D\nTot")
+    sublabels.append("")
+
+    # Composizione righe
+    table_data = [headers, sublabels]
     for i, row in enumerate(df.itertuples(index=False), start=1):
-        data.append([
+        riga = [
             i,
-            row.Atleta,
-            row.Club,
-            f"{row.D:.1f}" if row.D is not None else "-",
-            f"{row.E:.1f}" if row.E is not None else "-",
-            f"{row.Totale:.3f}"
-        ])
+            getattr(row, "Cognome", ""),
+            getattr(row, "Nome", ""),
+            getattr(row, "Anno", ""),
+            getattr(row, "Società", "")
+        ]
+        for a in attrezzi:
+            d_val = getattr(row, f"{a}_D", "-")
+            t_val = getattr(row, f"{a}_Tot", "-")
+            d_fmt = f"{d_val:.1f}" if isinstance(d_val, (int, float)) else "-"
+            t_fmt = f"{t_val:.3f}" if isinstance(t_val, (int, float)) else "-"
+            riga.append(f"{d_fmt}\n{t_fmt}")
+        riga.append(f"{row.Totale:.3f}")
+        table_data.append(riga)
 
-    table = Table(data, repeatRows=1)
+    # Tabella
+    table = Table(table_data, repeatRows=2)
     table.setStyle(TableStyle([
-        ('BACKGROUND', (0, 0), (-1, 0), colors.lightgrey),
-        ('TEXTCOLOR', (0, 0), (-1, 0), colors.black),
-        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
-        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-        ('GRID', (0, 0), (-1, -1), 0.5, colors.grey),
-        ('FONTSIZE', (0, 0), (-1, -1), 10),
+        ('SPAN', (0,0), (0,1)), ('SPAN', (1,0), (1,1)), ('SPAN', (2,0), (2,1)),
+        ('SPAN', (3,0), (3,1)), ('SPAN', (4,0), (4,1)), ('SPAN', (-1,0), (-1,1)),
+        ('ALIGN', (0,0), (-1,-1), 'CENTER'),
+        ('VALIGN', (0,0), (-1,-1), 'MIDDLE'),
+        ('FONTNAME', (0,0), (-1,1), 'Helvetica-Bold'),
+        ('FONTSIZE', (0,0), (-1,-1), 8),
+        ('GRID', (0,0), (-1,-1), 0.4, colors.grey),
+        ('BOTTOMPADDING', (0,0), (-1,-1), 4),
+        ('TOPPADDING', (0,0), (-1,-1), 4),
     ]))
 
     elements.append(table)
     doc.build(elements)
-    pdf_data = buffer.getvalue()
-    buffer.close()
-    return pdf_data
-
-def export_pdf_results():
-    st.title("Generazione Report PDF Risultati")
-
-    conn = get_connection()
-    c = conn.cursor()
-
-    df = pd.read_sql_query("""
-        SELECT a.name || ' ' || a.surname AS Atleta,
-               a.club AS Club,
-               s.d AS D,
-               s.e AS E,
-               s.score AS Totale
-        FROM scores s
-        JOIN athletes a ON a.id = s.athlete_id
-        ORDER BY Totale DESC
-    """, conn)
-
-    st.dataframe(df, use_container_width=True)
-
-    if st.button("Genera PDF"):
-        pdf_bytes = generate_pdf(df)
-        st.download_button(
-            label="Scarica Report PDF",
-            data=pdf_bytes,
-            file_name='risultati_ufficiali.pdf',
-            mime='application/pdf'
-        )
-
-    conn.close()
+    buffer.seek(0)
+    return buffer.getvalue()
