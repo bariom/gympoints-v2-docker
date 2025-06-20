@@ -54,7 +54,6 @@ def mostra_logo():
 
             <div id="logo-top-left">
                 <img src="data:image/png;base64,{logo_b64}" alt="Logo"/>
-                <span>GymPoints</span>
             </div>
             """,
             unsafe_allow_html=True
