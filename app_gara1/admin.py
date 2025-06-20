@@ -14,7 +14,7 @@ from db import get_connection
 from PIL import Image
 from exporter import export_results_detailed
 from pdf_export import export_pdf_results
-aaa
+
 
 # Utility immagine base64
 def image_to_base64(path):
@@ -125,7 +125,7 @@ def show_admin():
 
     if not st.session_state.admin_logged_in:
         with st.container():
-            mostra_logo("Accesso Amministrazione")
+            mostra_logo("???Accesso Amministrazione")
             with st.form("login_form"):
                 username = st.text_input("Utente")
                 password = st.text_input("Password", type="password")
