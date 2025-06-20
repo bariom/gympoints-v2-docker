@@ -379,10 +379,37 @@ def show_admin():
         """).fetchall()
         st.dataframe(rot_table, use_container_width=True)
 
-        if st.button("Reset completo rotazioni"):
-            c.execute("DELETE FROM rotations")
-            conn.commit()
-            st.success("Tutte le rotazioni eliminate")
+        with st.container():
+            st.markdown("""
+                <style>
+                #reset-rotazioni button {
+                    background-color: #d9534f;
+                    color: white;
+                    font-weight: 600;
+                    border: none;
+                    border-radius: 6px;
+                    padding: 0.4rem 1.2rem;
+                }
+                #reset-rotazioni button:hover {
+                    background-color: #c9302c;
+                }
+                </style>
+            """, unsafe_allow_html=True)
+
+            st.divider()
+            st.markdown("### ⚠️ Reset Rotazioni")
+
+            conferma_reset = st.checkbox("Confermo di voler eliminare **tutte** le rotazioni", key="check_reset_rot")
+
+            with st.container():
+                if st.button("Reset completo rotazioni", key="reset-rotazioni"):
+                    if conferma_reset:
+                        c.execute("DELETE FROM rotations")
+                        conn.commit()
+                        st.success("Tutte le rotazioni eliminate.")
+                    else:
+                        st.warning("Devi confermare la cancellazione selezionando la checkbox.")
+
         # PREVIEW rotazioni olimpiche
         st.markdown("### Preview rotazioni olimpiche 2–6")
         gruppi = []
