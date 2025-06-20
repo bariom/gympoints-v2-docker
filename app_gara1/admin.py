@@ -125,7 +125,7 @@ def show_admin():
 
     if not st.session_state.admin_logged_in:
         with st.container():
-            mostra_logo("???Accesso Amministrazione")
+            mostra_logo("CIAO - Accesso Amministrazione")
             with st.form("login_form"):
                 username = st.text_input("Utente")
                 password = st.text_input("Password", type="password")
