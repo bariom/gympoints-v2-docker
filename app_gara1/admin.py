@@ -29,7 +29,7 @@ def mostra_logo(titolo):
         st.markdown(
             f"""
             <div style="display: flex; align-items: center; justify-content: space-between;">
-                <img src="data:image/png;base64,{logo_b64}" alt="Gympoints Logo" style="height:60px;"/>
+                <img src="data:image/png;base64,{logo_b64}" alt="Gympoints Logo" style="height:80px;"/>
                 <h1 style="margin: 0; padding: 0;">{titolo}</h1>
             </div>
             <hr style="margin-top: 10px;"/>
@@ -110,7 +110,7 @@ def reset_database():
 
 # MAIN ADMIN
 def show_admin():
-    mostra_logo("ADMIN")
+    mostra_logo("")
     # ---- Login Admin ----
     def check_credentials(username, password):
         # Inserisci qui i tuoi utenti e password (meglio hashate in futuro)
