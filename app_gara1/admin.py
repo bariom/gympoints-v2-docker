@@ -90,26 +90,27 @@ def reset_database():
     conn.close()
     st.success("Database resettato con successo")
 
-
-# MAIN ADMIN
-def show_admin():
-    # Inserimento logo in alto a sinistra
-    logo_path = "/img/logo.png"
+# Mostra logo con titolo accanto
+def mostra_logo(titolo):
+    logo_path = os.path.join("img", "logo.png")
     if os.path.exists(logo_path):
         logo_b64 = image_to_base64(logo_path)
         st.markdown(
             f"""
             <div style="display: flex; align-items: center; justify-content: space-between;">
                 <img src="{logo_b64}" alt="Gympoints Logo" style="height:60px;"/>
-                <h1 style="margin: 0; padding: 0;">Amministrazione Gara</h1>
+                <h1 style="margin: 0; padding: 0;">{titolo}</h1>
             </div>
             <hr style="margin-top: 10px;"/>
             """,
             unsafe_allow_html=True
         )
     else:
-        st.title("Amministrazione Gara")
+        st.title(titolo)
 
+
+# MAIN ADMIN
+def show_admin():
     # ---- Login Admin ----
     def check_credentials(username, password):
         # Inserisci qui i tuoi utenti e password (meglio hashate in futuro)
@@ -122,7 +123,7 @@ def show_admin():
         st.session_state.admin_logged_in = False
 
     if not st.session_state.admin_logged_in:
-        st.title("Accesso Amministrazione")
+        mostra_logo("Accesso Amministrazione")
         with st.form("login_form"):
             username = st.text_input("Utente")
             password = st.text_input("Password", type="password")
@@ -136,7 +137,7 @@ def show_admin():
                     st.error("Credenziali non valide.")
         return  # blocca l'accesso al resto della pagina
 
-    st.title("Amministrazione Gara")
+    mostra_logo("Amministrazione Gara")
 
     conn = get_connection()
     c = conn.cursor()
