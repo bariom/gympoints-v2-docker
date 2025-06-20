@@ -571,7 +571,6 @@ def costruisci_df_classifica(attrezzi=None):
             a.id AS atleta_id,
             a.name AS Nome,
             a.surname AS Cognome,
-            a.birth_year AS Anno,
             a.club AS Società,
             s.apparatus AS Attrezzo,
             s.d AS D,

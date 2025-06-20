@@ -16,7 +16,6 @@ def costruisci_df_classifica(attrezzi=None):
             a.id AS atleta_id,
             a.name AS Nome,
             a.surname AS Cognome,
-            a.birth_year AS Anno,
             a.club AS Società,
             s.apparatus AS Attrezzo,
             s.d AS D,
@@ -27,9 +26,9 @@ def costruisci_df_classifica(attrezzi=None):
     df_raw = pd.read_sql_query(query, conn)
     conn.close()
 
-    df_pivot_d = df_raw.pivot_table(index=['Cognome', 'Nome', 'Anno', 'Società'],
+    df_pivot_d = df_raw.pivot_table(index=['Cognome', 'Nome', 'Società'],
                                     columns='Attrezzo', values='D', aggfunc='first')
-    df_pivot_t = df_raw.pivot_table(index=['Cognome', 'Nome', 'Anno', 'Società'],
+    df_pivot_t = df_raw.pivot_table(index=['Cognome', 'Nome', 'Società'],
                                     columns='Attrezzo', values='TotaleParziale', aggfunc='first')
 
     df_pivot_d.columns = [f"{col}_D" for col in df_pivot_d.columns]
@@ -38,7 +37,7 @@ def costruisci_df_classifica(attrezzi=None):
     df = pd.concat([df_pivot_d, df_pivot_t], axis=1).reset_index()
 
     # Ordina colonne secondo attrezzi
-    ordered_cols = ['Cognome', 'Nome', 'Anno', 'Società']
+    ordered_cols = ['Cognome', 'Nome', 'Società']
     for a in attrezzi:
         ordered_cols.append(f"{a}_D")
         ordered_cols.append(f"{a}_Tot")
@@ -87,7 +86,7 @@ def generate_official_pdf(df, attrezzi=None, logo_path=None, gara_title="Classif
     icon_paths = [os.path.join("img", f"{a}.png") for a in attrezzi]
 
     # Prima riga intestazioni
-    headers = ["Rg.", "Cognome", "Nome", "Anno", "Società"]
+    headers = ["Rg.", "Cognome", "Nome", "Società"]
     for path in icon_paths:
         if os.path.exists(path):
             with open(path, "rb") as f:
@@ -98,7 +97,7 @@ def generate_official_pdf(df, attrezzi=None, logo_path=None, gara_title="Classif
     headers.append("Totale")
 
     # Seconda riga sotto intestazione
-    sublabels = ["", "", "", "", ""]
+    sublabels = ["", "", "", ""]
     for a in attrezzi:
         sublabels.append("D\nTot")
     sublabels.append("")
@@ -110,7 +109,6 @@ def generate_official_pdf(df, attrezzi=None, logo_path=None, gara_title="Classif
             i,
             getattr(row, "Cognome", ""),
             getattr(row, "Nome", ""),
-            getattr(row, "Anno", ""),
             getattr(row, "Società", "")
         ]
         for a in attrezzi:
