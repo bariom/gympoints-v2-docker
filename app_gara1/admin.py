@@ -108,6 +108,10 @@ def mostra_logo(titolo):
 
 # MAIN ADMIN
 def show_admin():
+    st.write("🏁 DEBUG - show_admin chiamato")
+
+    # TEST LOGO DIRETTO
+    st.image("img/logo.png", caption="DEBUG logo diretto", width=150)
     # ---- Login Admin ----
     def check_credentials(username, password):
         # Inserisci qui i tuoi utenti e password (meglio hashate in futuro)
