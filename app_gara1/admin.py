@@ -455,6 +455,7 @@ def show_admin():
                                   (att, athlete_id, rot))
             conn.commit()
             st.success("Rotazioni olimpiche 2–6 generate")
+            st.rerun
 
     # --- ESPORTAZIONI STANDARD ---
     with tab4:
