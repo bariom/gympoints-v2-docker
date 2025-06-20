@@ -110,6 +110,19 @@ def reset_database():
 
 # MAIN ADMIN
 def show_admin():
+    # CSS per alzare il logo
+    st.markdown("""
+        <style>
+        .main .block-container {
+            padding-top: 0.5rem !important;
+        }
+        header {
+            height: 0 !important;
+            visibility: hidden;
+        }
+        </style>
+    """, unsafe_allow_html=True)
+
     mostra_logo("")
     # ---- Login Admin ----
     def check_credentials(username, password):
