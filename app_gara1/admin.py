@@ -28,17 +28,36 @@ def mostra_logo(titolo):
         logo_b64 = image_to_base64(logo_path)
         st.markdown(
             f"""
-            <div style="display: flex; align-items: center; justify-content: space-between;">
-                <img src="data:image/png;base64,{logo_b64}" alt="Gympoints Logo" style="height:160px;"/>
-                <h1 style="margin: 0; padding: 0;">{titolo}</h1>
+            <style>
+            #logo-header {{
+                position: absolute;
+                top: 10px;
+                left: 30px;
+                z-index: 9999;
+                display: flex;
+                align-items: center;
+            }}
+            #logo-header img {{
+                height: 160px;
+                margin-right: 16px;
+            }}
+            #logo-header h1 {{
+                margin: 0;
+                font-size: 2rem;
+            }}
+            </style>
+            <div id="logo-header">
+                <img src="data:image/png;base64,{logo_b64}" alt="GymPoints"/>
+                <h1>{titolo}</h1>
             </div>
-            <hr style="margin-top: 10px;"/>
+            <div style="height: 100px;"></div>
             """,
             unsafe_allow_html=True
         )
     else:
         st.warning(f"Logo non trovato: {os.path.abspath(logo_path)}")
         st.title(titolo)
+
 
 # Genera codice giudice univoco
 def genera_codice_giudice(nome: str, cognome: str) -> str:
@@ -110,34 +129,6 @@ def reset_database():
 
 # MAIN ADMIN
 def show_admin():
-    # CSS per alzare il logo
-    st.markdown("""
-        <style>
-        /* Riduce il padding globale */
-        .main .block-container {
-            padding-top: 0rem !important;
-        }
-
-        /* Nasconde l'header Streamlit (menu hamburger, ecc.) */
-        header {
-            visibility: hidden;
-            height: 0px !important;
-        }
-
-        /* Rimuove margine tra top della pagina e primo blocco */
-        section.main > div:first-child {
-            margin-top: 0rem !important;
-            padding-top: 0rem !important;
-        }
-
-        /* Rimuove margini invisibili auto-generati */
-        div.block-container:before,
-        div.block-container:after {
-            content: none !important;
-            height: 0px !important;
-        }
-        </style>
-    """, unsafe_allow_html=True)
 
     mostra_logo("")
     # ---- Login Admin ----
