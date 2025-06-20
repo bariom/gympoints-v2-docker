@@ -26,28 +26,34 @@ def mostra_logo():
     logo_path = os.path.join("img", "logo.png")
     if os.path.exists(logo_path):
         logo_b64 = image_to_base64(logo_path)
+
+        st.markdown("""
+            <style>
+            .block-container {
+                padding-top: 0.5rem !important;
+            }
+            header, footer {
+                visibility: hidden;
+                height: 0px;
+            }
+            #logo-wrapper {
+                display: flex;
+                justify-content: flex-start;
+                align-items: center;
+                margin-bottom: 0.5rem;
+                margin-top: 0;
+            }
+            #logo-wrapper img {
+                height: 180px;
+                margin-bottom: 0;
+            }
+            </style>
+        """, unsafe_allow_html=True)
+
         st.markdown(
             f"""
-            <style>
-            #logo-top-left {{
-                position: fixed;
-                top: 12px;
-                left: 12px;
-                z-index: 10000;
-                background-color: transparent;
-                padding: 0;
-                border-radius: 0;
-                box-shadow: none;
-            }}
-            #logo-top-left img {{
-                height: 120px;
-                margin: 0;
-                display: block;
-            }}
-            </style>
-
-            <div id="logo-top-left">
-                <img src="data:image/png;base64,{logo_b64}" alt="Logo"/>
+            <div id="logo-wrapper">
+                <img src="data:image/png;base64,{logo_b64}" alt="Logo GymPoints"/>
             </div>
             """,
             unsafe_allow_html=True
