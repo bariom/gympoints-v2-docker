@@ -113,12 +113,28 @@ def show_admin():
     # CSS per alzare il logo
     st.markdown("""
         <style>
+        /* Riduce il padding globale */
         .main .block-container {
-            padding-top: 0.5rem !important;
+            padding-top: 0rem !important;
         }
+
+        /* Nasconde l'header Streamlit (menu hamburger, ecc.) */
         header {
-            height: 0 !important;
             visibility: hidden;
+            height: 0px !important;
+        }
+
+        /* Rimuove margine tra top della pagina e primo blocco */
+        section.main > div:first-child {
+            margin-top: 0rem !important;
+            padding-top: 0rem !important;
+        }
+
+        /* Rimuove margini invisibili auto-generati */
+        div.block-container:before,
+        div.block-container:after {
+            content: none !important;
+            height: 0px !important;
         }
         </style>
     """, unsafe_allow_html=True)
