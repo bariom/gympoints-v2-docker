@@ -412,3 +412,4 @@ def show_admin():
             reset_database()
 
     conn.close()
+mostra_logo("DEBUG LOGO TEST")
