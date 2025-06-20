@@ -34,21 +34,15 @@ def mostra_logo():
                 top: 12px;
                 left: 12px;
                 z-index: 10000;
-                background-color: white;
-                padding: 4px 10px 4px 10px;
-                border-radius: 10px;
-                box-shadow: 0 0 10px rgba(0,0,0,0.1);
-                display: flex;
-                align-items: center;
+                background-color: transparent;
+                padding: 0;
+                border-radius: 0;
+                box-shadow: none;
             }}
             #logo-top-left img {{
                 height: 180px;
-                margin-right: 12px;
-            }}
-            #logo-top-left span {{
-                font-size: 1.5rem;
-                font-weight: 700;
-                color: #003366;
+                margin: 0;
+                display: block;
             }}
             </style>
 
@@ -58,6 +52,7 @@ def mostra_logo():
             """,
             unsafe_allow_html=True
         )
+
 
 
 
