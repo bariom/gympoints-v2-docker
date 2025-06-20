@@ -461,7 +461,10 @@ def show_admin():
     with tab4:
         st.subheader("Esportazioni")
         export_results_detailed()
-        generate_official_pdf()
+        if st.button("Genera PDF"):
+            df = costruisci_df_classifica()
+            pdf_bytes = generate_official_pdf(df)
+            st.download_button("Scarica Report PDF", pdf_bytes, file_name="classifica_gam.pdf", mime="application/pdf")
 
     # --- STATO GARA ---
     with tab5:
