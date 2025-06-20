@@ -105,7 +105,7 @@ def show_admin():
         st.session_state.admin_logged_in = False
 
     if not st.session_state.admin_logged_in:
-        st.title("Accesso Amministrazione")
+        st.title("CCC - Accesso Amministrazione")
         with st.form("login_form"):
             username = st.text_input("Utente")
             password = st.text_input("Password", type="password")
