@@ -92,8 +92,7 @@ def reset_database():
 
 # Mostra logo con titolo accanto
 def mostra_logo(titolo):
-    base_dir = os.path.dirname(__file__)
-    logo_path = os.path.join(base_dir, "img", "logo.png")
+    logo_path = os.path.join("img", "logo.png")  # relativo a /app, funziona in Docker
     if os.path.exists(logo_path):
         logo_b64 = image_to_base64(logo_path)
         st.markdown(
@@ -107,7 +106,9 @@ def mostra_logo(titolo):
             unsafe_allow_html=True
         )
     else:
+        st.warning(f"Logo non trovato in: {os.path.abspath(logo_path)}")
         st.title(titolo)
+
 
 
 
