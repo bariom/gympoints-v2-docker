@@ -59,9 +59,7 @@ def mostra_logo():
             """,
             unsafe_allow_html=True
         )
-    else:
-        st.warning(f"Logo non trovato: {os.path.abspath(logo_path)}")
-        st.title(titolo)
+
 
 
 # Genera codice giudice univoco
@@ -135,7 +133,7 @@ def reset_database():
 # MAIN ADMIN
 def show_admin():
 
-    mostra_logo("")
+    mostra_logo()
     # ---- Login Admin ----
     def check_credentials(username, password):
         # Inserisci qui i tuoi utenti e password (meglio hashate in futuro)
