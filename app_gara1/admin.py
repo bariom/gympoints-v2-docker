@@ -120,19 +120,19 @@ def show_admin():
         st.session_state.admin_logged_in = False
 
     if not st.session_state.admin_logged_in:
-        mostra_logo("Accesso Amministrazione")
-        with st.form("login_form"):
-            username = st.text_input("Utente")
-            password = st.text_input("Password", type="password")
-            login_btn = st.form_submit_button("Login")
-
-            if login_btn:
-                if check_credentials(username, password):
-                    st.session_state.admin_logged_in = True
-                    st.rerun()
-                else:
-                    st.error("Credenziali non valide.")
-        return  # blocca l'accesso al resto della pagina
+        with st.container():
+            mostra_logo("Accesso Amministrazione")
+            with st.form("login_form"):
+                username = st.text_input("Utente")
+                password = st.text_input("Password", type="password")
+                login_btn = st.form_submit_button("Login")
+                if login_btn:
+                    if check_credentials(username, password):
+                        st.session_state.admin_logged_in = True
+                        st.rerun()
+                    else:
+                        st.error("Credenziali non valide.")
+        return
 
     mostra_logo("Amministrazione Gara")
 
