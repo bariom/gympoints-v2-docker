@@ -42,7 +42,7 @@ def mostra_logo():
                 align-items: center;
             }}
             #logo-top-left img {{
-                height: 60px;
+                height: 180px;
                 margin-right: 12px;
             }}
             #logo-top-left span {{
