@@ -29,7 +29,7 @@ def mostra_logo(titolo):
         st.markdown(
             f"""
             <div style="display: flex; align-items: center; justify-content: space-between;">
-                <img src="data:image/png;base64,{logo_b64}" alt="Gympoints Logo" style="height:80px;"/>
+                <img src="data:image/png;base64,{logo_b64}" alt="Gympoints Logo" style="height:160px;"/>
                 <h1 style="margin: 0; padding: 0;">{titolo}</h1>
             </div>
             <hr style="margin-top: 10px;"/>
