@@ -71,7 +71,8 @@ def show_giudice():
             )
 
         # Rotazione corrente
-        rotazione_corrente = int(c.execute("SELECT value FROM state WHERE key = 'rotazione_corrente'").fetchone()[0])
+        result = c.execute("SELECT value FROM state WHERE key = 'rotazione_corrente'").fetchone()
+        rotazione_corrente = int(result[0]) if result else 1  # fallback a 1 se non presente
 
         # --- Elenco atleti in rotazione corrente per l'attrezzo selezionato ---
         atleti_rotazione = c.execute("""
