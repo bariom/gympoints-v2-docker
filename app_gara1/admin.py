@@ -486,6 +486,38 @@ def show_admin():
             conn.commit()
             st.success("Logica aggiornata")
 
+        st.markdown("### Punteggi registrati")
+        scores = c.execute("""
+            SELECT s.id, a.name || ' ' || a.surname AS atleta, s.apparatus, s.d, s.e, s.penalty, s.score
+            FROM scores s
+            JOIN athletes a ON a.id = s.athlete_id
+            ORDER BY s.id DESC
+        """).fetchall()
+
+        if not scores:
+            st.info("Nessun punteggio registrato.")
+        else:
+            for riga in scores:
+                score_id, atleta, attrezzo, d_val, e_val, penalty_val, score_val = riga
+
+                with st.expander(f"{atleta} - {attrezzo}"):
+                    col1, col2, col3, col4 = st.columns(4)
+                    new_d = col1.number_input("D", value=d_val or 0.0, step=0.1, key=f"d_{score_id}")
+                    new_e = col2.number_input("E", value=e_val or 0.0, step=0.1, key=f"e_{score_id}")
+                    new_p = col3.number_input("Penalty", value=penalty_val or 0.0, step=0.1, key=f"p_{score_id}")
+                    col4.metric("Totale", round(new_d + new_e - new_p, 3))
+
+                    if st.button("Salva modifiche", key=f"save_{score_id}"):
+                        nuovo_totale = new_d + new_e - new_p
+                        c.execute("""
+                            UPDATE scores
+                            SET d = ?, e = ?, penalty = ?, score = ?
+                            WHERE id = ?
+                        """, (new_d, new_e, new_p, nuovo_totale, score_id))
+                        conn.commit()
+                        st.success("Punteggio aggiornato.")
+                        st.rerun()
+
     # --- IMPOSTAZIONI GARA ---
     with tab6:
         st.subheader("Impostazioni generali")
