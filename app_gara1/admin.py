@@ -22,7 +22,7 @@ def image_to_base64(path):
     with open(path, "rb") as img_file:
         return base64.b64encode(img_file.read()).decode("utf-8")
 
-def mostra_logo_fisso():
+def mostra_logo():
     logo_path = os.path.join("img", "logo.png")
     if os.path.exists(logo_path):
         logo_b64 = image_to_base64(logo_path)
