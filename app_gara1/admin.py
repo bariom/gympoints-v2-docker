@@ -454,8 +454,9 @@ def show_admin():
                         c.execute("INSERT INTO rotations (apparatus, athlete_id, rotation_order) VALUES (?, ?, ?)",
                                   (att, athlete_id, rot))
             conn.commit()
-            st.success("Rotazioni olimpiche 2–6 generate")
             st.rerun
+            st.success("Rotazioni olimpiche 2–6 generate")
+
 
     # --- ESPORTAZIONI STANDARD ---
     with tab4:
