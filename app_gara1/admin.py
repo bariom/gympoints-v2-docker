@@ -92,7 +92,8 @@ def reset_database():
 
 # Mostra logo con titolo accanto
 def mostra_logo(titolo):
-    logo_path = os.path.join("img", "logo.png")
+    base_dir = os.path.dirname(__file__)
+    logo_path = os.path.join(base_dir, "img", "logo.png")
     if os.path.exists(logo_path):
         logo_b64 = image_to_base64(logo_path)
         st.markdown(
@@ -107,6 +108,7 @@ def mostra_logo(titolo):
         )
     else:
         st.title(titolo)
+
 
 
 # MAIN ADMIN
