@@ -6,6 +6,67 @@ import pandas as pd
 import io
 import os
 
+def costruisci_df_classifica(attrezzi=None):
+    if attrezzi is None:
+        attrezzi = ["Suolo", "Cavallo a maniglie", "Anelli", "Parallele", "Sbarra", "Volteggio"]
+
+    conn = get_connection()
+    query = """
+        SELECT 
+            a.id AS atleta_id,
+            a.name AS Nome,
+            a.surname AS Cognome,
+            a.birth_year AS Anno,
+            a.club AS Società,
+            s.apparatus AS Attrezzo,
+            s.d AS D,
+            s.score AS TotaleParziale
+        FROM athletes a
+        LEFT JOIN scores s ON a.id = s.athlete_id
+    """
+    df_raw = pd.read_sql_query(query, conn)
+    conn.close()
+
+    df_pivot_d = df_raw.pivot_table(index=['Cognome', 'Nome', 'Anno', 'Società'],
+                                    columns='Attrezzo', values='D', aggfunc='first')
+    df_pivot_t = df_raw.pivot_table(index=['Cognome', 'Nome', 'Anno', 'Società'],
+                                    columns='Attrezzo', values='TotaleParziale', aggfunc='first')
+
+    df_pivot_d.columns = [f"{col}_D" for col in df_pivot_d.columns]
+    df_pivot_t.columns = [f"{col}_Tot" for col in df_pivot_t.columns]
+
+    df = pd.concat([df_pivot_d, df_pivot_t], axis=1).reset_index()
+
+    # Ordina colonne secondo attrezzi
+    ordered_cols = ['Cognome', 'Nome', 'Anno', 'Società']
+    for a in attrezzi:
+        ordered_cols.append(f"{a}_D")
+        ordered_cols.append(f"{a}_Tot")
+    df = df.reindex(columns=[col for col in ordered_cols if col in df.columns])
+
+    # Calcolo totale
+    df['Totale'] = df[[c for c in df.columns if c.endswith("_Tot")]].sum(axis=1, skipna=True)
+    df = df.sort_values(by="Totale", ascending=False).reset_index(drop=True)
+
+    return df
+
+def export_pdf_results():
+    st.title("Classifica Federale - Esportazione PDF")
+
+    attrezzi = ["Suolo", "Cavallo a maniglie", "Anelli", "Parallele", "Sbarra", "Volteggio"]
+    df = costruisci_df_classifica(attrezzi)
+
+    st.dataframe(df, use_container_width=True)
+
+    if st.button("Genera PDF"):
+        pdf_bytes = generate_official_pdf(df, attrezzi=attrezzi)
+        st.download_button(
+            label="📥 Scarica Report PDF",
+            data=pdf_bytes,
+            file_name="classifica_gam.pdf",
+            mime="application/pdf"
+        )
+
 def generate_official_pdf(df, attrezzi=None, logo_path=None, gara_title="Classifica GAM Introduzione"):
     if attrezzi is None:
         attrezzi = ["Suolo", "Cavallo a maniglie", "Anelli", "Parallele", "Sbarra", "Volteggio"]
