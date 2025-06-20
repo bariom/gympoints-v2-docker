@@ -98,16 +98,7 @@ def mostra_logo(titolo):
     # relativo a /app, funziona in Docker
     if os.path.exists(logo_path):
         logo_b64 = image_to_base64(logo_path)
-        st.markdown(
-            f"""
-            <div style="display: flex; align-items: center; justify-content: space-between;">
-                <img src="{logo_b64}" alt="Gympoints Logo" style="height:60px;"/>
-                <h1 style="margin: 0; padding: 0;">{titolo}</h1>
-            </div>
-            <hr style="margin-top: 10px;"/>
-            """,
-            unsafe_allow_html=True
-        )
+        st.image(logo_path, caption=titolo, width=150)
     else:
         st.warning(f"Logo non trovato in: {os.path.abspath(logo_path)}")
         st.title(titolo)
