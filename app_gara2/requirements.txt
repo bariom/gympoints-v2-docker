@@ -1,7 +1,0 @@
-streamlit
-streamlit-autorefresh
-pandas
-Pillow
-qrcode[pil]
-reportlab
-xlsxwriter==3.1.9

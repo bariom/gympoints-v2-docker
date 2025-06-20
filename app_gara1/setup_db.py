@@ -1,6 +1,6 @@
 import sqlite3
 
-conn = sqlite3.connect("gym.db")
+conn = sqlite3.connect("gym2.db")
 c = conn.cursor()
 
 # Tabelle principali

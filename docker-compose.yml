@@ -1,4 +1,3 @@
-version: "3.8"
 
 services:
 
@@ -23,12 +22,6 @@ services:
     networks:
       - gympoints-net
 
-  gara2:
-    build: ./app_gara2
-    container_name: gara2
-    restart: always
-    networks:
-      - gympoints-net
 
 networks:
   gympoints-net:

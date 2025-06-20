@@ -90,28 +90,9 @@ def reset_database():
     conn.close()
     st.success("Database resettato con successo")
 
-# Mostra logo con titolo accanto
-def mostra_logo(titolo):
-    st.write("DEBUG: logo_path =", os.path.abspath("img/logo.png"))
-    st.write("DEBUG: file exists?", os.path.exists("img/logo.png"))
-    st.image("img/logo.png")  # test diretto
-    # relativo a /app, funziona in Docker
-    if os.path.exists(logo_path):
-        logo_b64 = image_to_base64(logo_path)
-        st.image(logo_path, caption=titolo, width=150)
-    else:
-        st.warning(f"Logo non trovato in: {os.path.abspath(logo_path)}")
-        st.title(titolo)
-
-
-
 
 # MAIN ADMIN
 def show_admin():
-    st.write("🏁 DEBUG - show_admin chiamato")
-
-    # TEST LOGO DIRETTO
-    st.image("img/logo.png", caption="DEBUG logo diretto", width=150)
     # ---- Login Admin ----
     def check_credentials(username, password):
         # Inserisci qui i tuoi utenti e password (meglio hashate in futuro)
@@ -124,21 +105,21 @@ def show_admin():
         st.session_state.admin_logged_in = False
 
     if not st.session_state.admin_logged_in:
-        with st.container():
-            mostra_logo("CIAO - Accesso Amministrazione")
-            with st.form("login_form"):
-                username = st.text_input("Utente")
-                password = st.text_input("Password", type="password")
-                login_btn = st.form_submit_button("Login")
-                if login_btn:
-                    if check_credentials(username, password):
-                        st.session_state.admin_logged_in = True
-                        st.rerun()
-                    else:
-                        st.error("Credenziali non valide.")
-        return
+        st.title("Accesso Amministrazione")
+        with st.form("login_form"):
+            username = st.text_input("Utente")
+            password = st.text_input("Password", type="password")
+            login_btn = st.form_submit_button("Login")
 
-    mostra_logo("Amministrazione Gara")
+            if login_btn:
+                if check_credentials(username, password):
+                    st.session_state.admin_logged_in = True
+                    st.rerun()
+                else:
+                    st.error("Credenziali non valide.")
+        return  # blocca l'accesso al resto della pagina
+
+    st.title("Amministrazione Gara")
 
     conn = get_connection()
     c = conn.cursor()
@@ -407,4 +388,3 @@ def show_admin():
             reset_database()
 
     conn.close()
-mostra_logo("DEBUG LOGO TEST")
