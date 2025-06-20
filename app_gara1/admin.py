@@ -93,6 +93,23 @@ def reset_database():
 
 # MAIN ADMIN
 def show_admin():
+    # Inserimento logo in alto a sinistra
+    logo_path = "/img/logo.png"
+    if os.path.exists(logo_path):
+        logo_b64 = image_to_base64(logo_path)
+        st.markdown(
+            f"""
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+                <img src="{logo_b64}" alt="Gympoints Logo" style="height:60px;"/>
+                <h1 style="margin: 0; padding: 0;">Amministrazione Gara</h1>
+            </div>
+            <hr style="margin-top: 10px;"/>
+            """,
+            unsafe_allow_html=True
+        )
+    else:
+        st.title("Amministrazione Gara")
+
     # ---- Login Admin ----
     def check_credentials(username, password):
         # Inserisci qui i tuoi utenti e password (meglio hashate in futuro)
