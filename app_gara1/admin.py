@@ -22,6 +22,23 @@ def image_to_base64(path):
         b64_data = base64.b64encode(img_file.read()).decode("utf-8")
     return f"data:image/png;base64,{b64_data}"
 
+def mostra_logo(titolo):
+    logo_path = os.path.join("img", "logo.png")
+    if os.path.exists(logo_path):
+        logo_b64 = image_to_base64(logo_path)
+        st.markdown(
+            f"""
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+                <img src="data:image/png;base64,{logo_b64}" alt="Gympoints Logo" style="height:60px;"/>
+                <h1 style="margin: 0; padding: 0;">{titolo}</h1>
+            </div>
+            <hr style="margin-top: 10px;"/>
+            """,
+            unsafe_allow_html=True
+        )
+    else:
+        st.warning(f"Logo non trovato: {os.path.abspath(logo_path)}")
+        st.title(titolo)
 
 # Genera codice giudice univoco
 def genera_codice_giudice(nome: str, cognome: str) -> str:
@@ -93,6 +110,7 @@ def reset_database():
 
 # MAIN ADMIN
 def show_admin():
+    mostra_logo("ADMIN")
     # ---- Login Admin ----
     def check_credentials(username, password):
         # Inserisci qui i tuoi utenti e password (meglio hashate in futuro)
