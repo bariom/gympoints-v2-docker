@@ -22,35 +22,40 @@ def image_to_base64(path):
     with open(path, "rb") as img_file:
         return base64.b64encode(img_file.read()).decode("utf-8")
 
-def mostra_logo(titolo):
+def mostra_logo_fisso():
     logo_path = os.path.join("img", "logo.png")
     if os.path.exists(logo_path):
         logo_b64 = image_to_base64(logo_path)
         st.markdown(
             f"""
             <style>
-            #logo-header {{
-                position: absolute;
-                top: 10px;
-                left: 30px;
-                z-index: 9999;
+            #logo-top-left {{
+                position: fixed;
+                top: 12px;
+                left: 12px;
+                z-index: 10000;
+                background-color: white;
+                padding: 4px 10px 4px 10px;
+                border-radius: 10px;
+                box-shadow: 0 0 10px rgba(0,0,0,0.1);
                 display: flex;
                 align-items: center;
             }}
-            #logo-header img {{
-                height: 160px;
-                margin-right: 16px;
+            #logo-top-left img {{
+                height: 60px;
+                margin-right: 12px;
             }}
-            #logo-header h1 {{
-                margin: 0;
-                font-size: 2rem;
+            #logo-top-left span {{
+                font-size: 1.5rem;
+                font-weight: 700;
+                color: #003366;
             }}
             </style>
-            <div id="logo-header">
-                <img src="data:image/png;base64,{logo_b64}" alt="GymPoints"/>
-                <h1>{titolo}</h1>
+
+            <div id="logo-top-left">
+                <img src="data:image/png;base64,{logo_b64}" alt="Logo"/>
+                <span>GymPoints</span>
             </div>
-            <div style="height: 100px;"></div>
             """,
             unsafe_allow_html=True
         )
