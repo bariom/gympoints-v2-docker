@@ -23,6 +23,71 @@ def image_to_base64(path):
         return base64.b64encode(img_file.read()).decode("utf-8")
 
 def mostra_logo():
+    # Styling CSS
+    st.markdown("""
+        <style>
+        /* Rimuove header Streamlit e padding inutili */
+        .block-container {
+            padding-top: 1rem !important;
+            padding-bottom: 2rem !important;
+            max-width: 1400px;
+        }
+        header, footer { visibility: hidden; height: 0; }
+
+        h1, h2, h3, h4, .stMarkdown h1 {
+            color: #003366;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .stButton > button {
+            background-color: #003366;
+            color: white;
+            font-weight: 600;
+            border-radius: 8px;
+            padding: 0.4rem 1.2rem;
+            border: none;
+        }
+        .stButton > button:hover {
+            background-color: #00509E;
+        }
+
+        .stTextInput > div > input, .stNumberInput input, .stSelectbox select {
+            background-color: #f8f9fa;
+            border-radius: 6px;
+            padding: 0.4rem;
+            font-size: 1rem;
+        }
+
+        .stDownloadButton > button {
+            border: 1px solid #003366;
+            color: #003366;
+            background-color: white;
+            font-weight: 500;
+        }
+        .stDownloadButton > button:hover {
+            background-color: #003366;
+            color: white;
+        }
+
+        .stDataFrame, .dataframe {
+            border-radius: 8px;
+            overflow: hidden;
+            font-size: 0.9rem;
+        }
+
+        .stSelectbox, .stTextInput, .stNumberInput, .stCheckbox, .stToggle, .stRadio {
+            margin-bottom: 0.8rem;
+        }
+
+        .stTabs [data-baseweb="tab"] {
+            padding: 0.5rem 1.2rem;
+            font-weight: 600;
+        }
+        </style>
+    """, unsafe_allow_html=True)
+# Fine Styling
+
     logo_path = os.path.join("img", "logo.png")
     if os.path.exists(logo_path):
         logo_b64 = image_to_base64(logo_path)
